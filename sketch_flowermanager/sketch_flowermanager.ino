@@ -1,31 +1,57 @@
 /*
-setup initial constans which depends on components layout
+ * FLOWER MANAGER PROGRAMM for Arduino Uno board to manage flower's sensors and control water pomp
+ * Created by ADA, August 2015
+ * version 1.0, available under AGRPLv3 license
+ */
+
+#include "DCLed.h"
+#include "RGBLed.h"
+
+/*
+SETUP COMPONET'S PINS LAYOUT
 */
 
-// CMP1: light sensor
-#define SENSOR_LIGHT_DataPin 0    //Light sensor data pin
-#define IND_LIGHT_redPin 9
+//sensors
+#define SENSOR_LIGHT_DataPin    0       // Light sensor data pin
+#define SENSOR_TEMP_DataPin     1       // temperature sensor data pin
+#define SENSOR_WET_DataPin      2       // wet sensor data pin
+#define SENSOR_WATER_DataPin    3       // presure sensor data pin
 
-// CMP2: light status GRB LED pins layout
-//#define IND_LIGHT_redPin 9       // the pin that the red LED is attached to
-//#define IND_LIGHT_greenPin 11    // the pin that the green LED is attached to
-//#define IND_LIGHT_bluePin 10     // the pin that the blue LED is attached to 
-//flower_manager_sketchflower_manager_sketch
-//// CMP3: light alarm RED LED pin
-//#define  IND_LIGHT_ALARM 12
+// leds
+#define  LED_LIGHT_ALARM        12      // light indicator - if light dusring 24h enoght for flower
+#define  LED_TEMP_ALARM         7       // lingt indicator if temp is ok for flower
+#define  LED_WET_ALARM          8       // light indicator is earth is wet ehoght for flower
+#define  LED_WATER_ALARM        6       // light indicator if water is in watertank
 
-// -----------------------------------------------------------------------------
+// GRB leds
+#define RGB_LIGHT_redPin        9
+#define RGB_LIGHT_greenPin      11
+#define RGB_LIGHT_bluePin       10
 
-//setup internal constants
-//int DARK_LEVEL = 1000;                //level of darkness
-//int LOOP_F = 1000;                     // loop run frequency
-//// --------
-//
-////debug mode
-//bool DEBUG = false;
-//-----
+// sounds
+#define SOUND_DataPin           5       // sound device
 
-// class definitions
+//mechanics
+#define WATERPOMP_DataPin       4       // water pomp data pin
+
+// system's constant
+const int LOOP_F =              1000;   // loop run frequency
+const bool DEBUG =              false;  // if debug mode on
+
+// enviroment's constants
+const int DARK_LEVEL =          1000;   // value of light sensor for board of dark, if more then full dark
+const int DARKNESS_LEVEL =      800;    // value of light sensor for board of darkness, if less then sun
+
+/*
+VARIABLE DEFINITION SECTION
+*/
+
+// objects for leds creation
+DCLed led_light(LED_LIGHT_ALARM);       // object instance for light led alarm
+DCLed led_temp(LED_TEMP_ALARM);         // object instance for temp led alarm
+DCLed led_wet(LED_WET_ALARM);           // object instance for wet led alarm
+DCLed led_water(LED_WATER_ALARM);       // object instance for water level led alarm
+  
 //class LightSensor   // название класса
 //{
 //  private:
@@ -42,24 +68,13 @@ setup initial constans which depends on components layout
 //    }
 //};
 
-// --- end class definisions ----
-
-//void led_switch(int led_pin, bool light)
-//{
-//  if (light) {
-//    digitalWrite(led_pin, HIGH);
-//  } else {
-//    digitalWrite(led_pin, LOW);
-//  }
-//}
-//
-//int check_light()
-//{
-//  int val = 0;
-//  val = analogRead(SENSOR_LIGHT_DataPin);
-//  if (DEBUG) Serial.println(val);
-//  return val;
-//}
+int check_light()
+{
+  int val = 0;
+  val = analogRead(SENSOR_LIGHT_DataPin);
+  if (DEBUG) Serial.println(val);
+  return val;
+}
 //
 //void colorRGB(int IND_LIGHT_redPin, int IND_LIGHT_greenPin, int IND_LIGHT_bluePin)
 //{
@@ -87,11 +102,14 @@ setup initial constans which depends on components layout
 //}
 
 void setup() {
+  // serial port init
+  Serial.begin(9600);
+  
 //  //light indicator init
 //  light_indicator_init();
 //
 //  //computer communication init
-//  Serial.begin(9600);
+
 }
 // ----- end initials functions -------
 
@@ -110,5 +128,7 @@ void loop() {
 //  }
 //
 //  delay(LOOP_F);
+ led_light.on();
+ led_temp.on();
 
 }
