@@ -4,7 +4,7 @@
  * version 1.0, available under AGRPLv3 license
  */
 
-#include "DCLed.h"
+#include "LED.h"
 #include "RGBLed.h"
 
 /*
@@ -47,10 +47,10 @@ VARIABLE DEFINITION SECTION
 */
 
 // objects for leds creation
-DCLed led_light(LED_LIGHT_ALARM);       // object instance for light led alarm
-DCLed led_temp(LED_TEMP_ALARM);         // object instance for temp led alarm
-DCLed led_wet(LED_WET_ALARM);           // object instance for wet led alarm
-DCLed led_water(LED_WATER_ALARM);       // object instance for water level led alarm
+LED led_light(LED_LIGHT_ALARM);       // object instance for light led alarm
+LED led_temp(LED_TEMP_ALARM);         // object instance for temp led alarm
+LED led_wet(LED_WET_ALARM);           // object instance for wet led alarm
+LED led_water(LED_WATER_ALARM);       // object instance for water level led alarm
   
 //class LightSensor   // название класса
 //{

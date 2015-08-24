@@ -6,12 +6,12 @@
  * Version 1.0, available under AGPLv3 lecense
  * 
  */
-#ifndef DCLed_h
-#define DCLed_h
+#ifndef LED_h
+#define LED_h
 
 #include <Arduino.h>
 
-class DCLed {
+class LED {
   private:
   
   uint8_t  _dataPin;
@@ -20,10 +20,10 @@ class DCLed {
   public:
 
   // constructor
-  DCLed(uint8_t dataPin);
+  LED(uint8_t dataPin);
 
   //dectructor
-  ~DCLed();
+  ~LED();
 
   // switch led on
   void on();
