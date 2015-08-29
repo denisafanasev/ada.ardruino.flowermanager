@@ -1,30 +1,18 @@
-#ifndef RGBLed_H
-#define RGBLed_H
+#ifndef RGBLED_H
+#define RGBLED_H
 
 #include <Arduino.h>
 
-class RGBLed {
+class RGBLED {
   private:
-  
-  uint8_t  _dataPin;
-  bool     _isOn;
+    uint8_t  _redPin;
+    uint8_t  _greenPin;
+    uint8_t _bluePin;
 
   public:
-
-  // constructor
-  RGBLed(uint8_t dataPin);
-
-  //dectructor
-  ~RGBLed();
-
-  // switch led on
-  void on();
-
-  // switch led off
-  void off();
-
-  // led status
-  bool isOn();
+    // constructor
+    RGBLED(uint8_t toRedPin, uint8_t toGreenPin, uint8_t toBluePin);
+    void setColor(int roRed, int toGreen, int toBlue);
 };
 
 #endif

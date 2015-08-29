@@ -1,0 +1,35 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+LED	KEYWORD1
+BLED	KEYWORD1
+RGBLED	KEYWORD1
+LIGHTSENSOR	KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setColor	KEYWORD2
+getColor	KEYWORD2
+on	KEYWORD2
+off	KEYWORD2
+isOn	KEYWORD2
+value	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+LED_H	LITERAL1
+BLED_H	LITERAL1
+LIGHTSENSOR_H	LITERAL1
+RGBLED_H	LITERAL1

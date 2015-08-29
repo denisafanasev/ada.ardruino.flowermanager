@@ -2,30 +2,25 @@
  * CALSS IMPLEMENTATION SECTION
  */
 
-#include "RGBLed.h"
+#include "RGBLED.h"
 
 // constructor implementation
-RGBLed::RGBLed(uint8_t dataPin):_dataPin(dataPin) {
-  pinMode(_dataPin, OUTPUT);
-  digitalWrite(_dataPin, LOW);
-  _isOn = false;
+RGBLED::RGBLED(uint8_t toRedPin, uint8_t toGreenPin, uint8_t toBluePin) {
+
+  _redPin = toRedPin;
+  _greenPin = toGreenPin;
+  _bluePin = toBluePin;
+
+  pinMode(_redPin, OUTPUT);
+  pinMode(_greenPin, OUTPUT);
+  pinMode(_bluePin, OUTPUT);
 }
 
-// desctructor implementation
-RGBLed::~RGBLed() {
-  //nothing to destroy
+void RGBLED::setColor(int roRed, int toGreen, int toBlue)
+{
+  analogWrite(_redPin, constrain(roRed, 0, 255));
+  analogWrite(_greenPin, constrain(toGreen, 0, 255));
+  analogWrite(_bluePin, constrain(toBlue, 0, 255));
 }
 
-void RGBLed::on() {
-  digitalWrite(_dataPin, HIGH);
-  _isOn = true;
-}
 
-void RGBLed::off() {
-  digitalWrite(_dataPin, LOW);  
-  _isOn = false;
-}
-
-bool RGBLed::isOn() {
-  return _isOn;
-}
