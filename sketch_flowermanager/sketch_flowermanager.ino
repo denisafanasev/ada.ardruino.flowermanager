@@ -16,8 +16,9 @@ SETUP COMPONET'S PINS LAYOUT
 //sensors
 #define SENSOR_LIGHT_DATAPIN           0       // Light sensor data pin
 #define SENSOR_TEMP_DATAPIN            1       // temperature sensor data pin
-#define SENSOR_HUMIDITY_DATAPIN        2       // wet sensor data pin
-#define SENSOR_WATER_DATAPIN           3       // presure sensor data pin
+#define SENSOR1_HUMIDITY_DATAPIN       2       // wet sensor data pin
+#define SENSOR2_HUMIDITY_DATAPIN       3       // wet sensor data pin
+#define SENSOR_WATER_DATAPIN           4       // presure sensor data pin
 
 // leds
 #define  LED_LIGHT_ALARM_REDPIN        12      // light indicator - if light dusring 24h enoght for flower
@@ -46,10 +47,10 @@ const int LOOP_F =                     1000;   // loop run frequency
 const bool DEBUG =                     false;  // if debug mode on
 
 // enviroment's constants
-const int DARK_LEVEL =                 1000;   // value of light sensor for board of dark, if more then full dark
-const int DARKNESS_LEVEL =             800;    // value of light sensor for board of darkness, if less then sun
-const int HUMIDITY_LOW_LEVEL =         700;    // value of soil dryness
-const int HUMIDITY_HIGH_LEVEL =        450;    // level of soil wet
+const int DARK_LEVEL =                 800;   // value of light sensor for board of dark, if more then full dark
+const int DARKNESS_LEVEL =             400;    // value of light sensor for board of darkness, if less then sun
+const int HUMIDITY_LOW_LEVEL =         450;    // value of soil dryness
+const int HUMIDITY_HIGH_LEVEL =        700;    // level of soil wet
 
 /*
 VARIABLE DEFINITION SECTION
@@ -64,7 +65,13 @@ BLED waterTankLed(LED_WATER_ALARM_REDPIN, LED_WATER_ALARM_GREENPIN);    // objec
 RGBLED rgbLed(RGB_LIGHT_REDPIN, RGB_LIGHT_GREENPIN, RGB_LIGHT_BLUEPIN);
 
 LIGHTSENSOR lightSensor(SENSOR_LIGHT_DATAPIN);                          // light sensor init
-HUMIDITYSENSOR humiditySensor(SENSOR_HUMIDITY_DATAPIN);
+HUMIDITYSENSOR humiditySensor1(SENSOR1_HUMIDITY_DATAPIN);
+HUMIDITYSENSOR humiditySensor2(SENSOR2_HUMIDITY_DATAPIN);
+
+int _lightLevel = 0;
+int _humidityLevel1 = 0;
+int _humidityLevel2 = 0;
+int _averageHumidityLevel = 0;
 
 void setup() {
   // serial port init
@@ -85,28 +92,78 @@ void setup() {
 void loop() {
 
   // light check
-  if(DEBUG){
-    Serial.println(lightSensor.value());
+  _lightLevel = lightSensor.value();
+
+  if (DEBUG) {
+    Serial.println(" -> loop trace start <-");
+    Serial.print("Light sensor value: ");
+    Serial.println(_lightLevel);
+    Serial.print("Light level detected: ");
   }
-  
-  if (lightSensor.value() < 700) {  //sun
+
+  if (_lightLevel < DARKNESS_LEVEL) {  //sun
+    if (DEBUG) {
+      Serial.println("SUN");
+    }
     rgbLed.setColor(0, 255, 0);
   } else {
-    if (lightSensor.value() > 900) { //dark
+    if (DEBUG) {
+      Serial.println("DARKNESS");
+    }
+
+    if (_lightLevel > DARK_LEVEL) { //dark
       rgbLed.setColor(255, 0, 0);
     } else { //darkness
+      if (DEBUG) {
+        Serial.println("DARK");
+      }
+
       rgbLed.setColor(0, 0, 255);
     }
   }
 
   // soil humidity check
-   if(DEBUG){
-    Serial.println(humiditySensor.value());
+  _humidityLevel1 = humiditySensor1.value();
+  _humidityLevel2 = humiditySensor2.value();
+
+  if (DEBUG) {
+    Serial.print("Soil humidity sensor value 1: ");
+    Serial.println(_humidityLevel1);
+    Serial.print("Soil humidity sensor value 2: ");
+    Serial.println(_humidityLevel2);
   }
-  
-  if(humiditySensor.value()>HUMIDITY_LOW_LEVEL){
+
+  _averageHumidityLevel = (int)round((_humidityLevel1 + _humidityLevel2) / 2);
+
+  if (DEBUG) {
+    Serial.print("Soil humidity average value: ");
+    Serial.println(_averageHumidityLevel);
+    Serial.print("Humidity level detected: ");
+  }
+
+  if (_averageHumidityLevel < HUMIDITY_LOW_LEVEL) {
+
+    if (DEBUG) {
+      Serial.println("DRYNESS");
+    }
+
     humidityLed.setColor(1);
   } else {
+
+    if (_averageHumidityLevel > HUMIDITY_HIGH_LEVEL) {
+      if (DEBUG) {
+        Serial.println("WET");
+      }
+    } else {
+      if (DEBUG) {
+        Serial.println("NORMAL");
+      }
+    }
+
     humidityLed.setColor(2);
+  }
+
+  if (DEBUG) {
+    delay(1000);
   }
 }
