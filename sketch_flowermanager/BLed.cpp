@@ -10,8 +10,8 @@
 #include "BLED.h"
 
 BLED::BLED(uint8_t redPin, uint8_t greenPin) {
-  _redPin = redPin;
-  _greenPin = greenPin;
+  _redPin = constrain(redPin,0,13);
+  _greenPin = constrain(greenPin,0,13);
   _color = 0;
   pinMode(_redPin, OUTPUT);
   pinMode(_greenPin, OUTPUT);

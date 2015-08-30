@@ -8,7 +8,7 @@
 #include "BLED.h"
 #include "RGBLed.h"
 #include "LightSensor.h"
-
+#include "HumiditySensor.h"
 /*
 SETUP COMPONET'S PINS LAYOUT
 */
@@ -16,7 +16,7 @@ SETUP COMPONET'S PINS LAYOUT
 //sensors
 #define SENSOR_LIGHT_DATAPIN           0       // Light sensor data pin
 #define SENSOR_TEMP_DATAPIN            1       // temperature sensor data pin
-#define SENSOR_WET_DATAPIN             2       // wet sensor data pin
+#define SENSOR_HUMIDITY_DATAPIN        2       // wet sensor data pin
 #define SENSOR_WATER_DATAPIN           3       // presure sensor data pin
 
 // leds
@@ -48,6 +48,8 @@ const bool DEBUG =                     false;  // if debug mode on
 // enviroment's constants
 const int DARK_LEVEL =                 1000;   // value of light sensor for board of dark, if more then full dark
 const int DARKNESS_LEVEL =             800;    // value of light sensor for board of darkness, if less then sun
+const int HUMIDITY_LOW_LEVEL =         700;    // value of soil dryness
+const int HUMIDITY_HIGH_LEVEL =        450;    // level of soil wet
 
 /*
 VARIABLE DEFINITION SECTION
@@ -62,6 +64,7 @@ BLED waterTankLed(LED_WATER_ALARM_REDPIN, LED_WATER_ALARM_GREENPIN);    // objec
 RGBLED rgbLed(RGB_LIGHT_REDPIN, RGB_LIGHT_GREENPIN, RGB_LIGHT_BLUEPIN);
 
 LIGHTSENSOR lightSensor(SENSOR_LIGHT_DATAPIN);                          // light sensor init
+HUMIDITYSENSOR humiditySensor(SENSOR_HUMIDITY_DATAPIN);
 
 void setup() {
   // serial port init
@@ -71,15 +74,21 @@ void setup() {
   }
 
   lightLed.setColor(2);
-//  temperatureLed.setColor(1);
-//  humidityLed.setColor(1);
-//  waterTankLed.setColor(1);
+  humidityLed.setColor(0);
+  temperatureLed.setColor(0);
+  waterTankLed.setColor(0);
 
 }
 // ----- end initials functions -------
 
 // MAIN PROGRAMM
 void loop() {
+
+  // light check
+  if(DEBUG){
+    Serial.println(lightSensor.value());
+  }
+  
   if (lightSensor.value() < 700) {  //sun
     rgbLed.setColor(0, 255, 0);
   } else {
@@ -88,5 +97,16 @@ void loop() {
     } else { //darkness
       rgbLed.setColor(0, 0, 255);
     }
+  }
+
+  // soil humidity check
+   if(DEBUG){
+    Serial.println(humiditySensor.value());
+  }
+  
+  if(humiditySensor.value()>HUMIDITY_LOW_LEVEL){
+    humidityLed.setColor(1);
+  } else {
+    humidityLed.setColor(2);
   }
 }

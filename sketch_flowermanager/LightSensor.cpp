@@ -9,7 +9,7 @@
 #include "LIGHTSENSOR.h"
 
 LIGHTSENSOR::LIGHTSENSOR(uint8_t toDataPin) {
-  _dataPin = toDataPin;
+  _dataPin = constrain(toDataPin,0,5);
 }
 
 int LIGHTSENSOR::value() {

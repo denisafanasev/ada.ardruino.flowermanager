@@ -10,7 +10,7 @@
 
 // constructor implementation
 LED::LED(uint8_t dataPin) {
-  _dataPin = dataPin;
+  _dataPin = constrain(dataPin,0,13);
   pinMode(_dataPin, OUTPUT);
   digitalWrite(_dataPin, LOW);
   _isOn = false;
