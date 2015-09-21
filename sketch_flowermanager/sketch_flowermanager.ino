@@ -6,6 +6,7 @@
 
 #include "LED.h"
 #include "BLED.h"
+#include "PUMP.h"
 #include "RGBLed.h"
 #include "LightSensor.h"
 #include "HumiditySensor.h"
@@ -22,13 +23,15 @@ SETUP COMPONET'S PINS LAYOUT
 
 // leds
 #define  LED_LIGHT_ALARM_REDPIN        12      // light indicator - if light dusring 24h enoght for flower
-#define  LED_TEMP_ALARM_REDPIN         7       // lingt indicator if temp is ok for flower
-#define  LED_WET_ALARM_REDPIN          8       // light indicator is earth is wet ehoght for flower
-#define  LED_WATER_ALARM_REDPIN        6       // light indicator if water is in watertank
-
 #define  LED_LIGHT_ALARM_GREENPIN      3       // light indicator - if light dusring 24h enoght for flower
-#define  LED_TEMP_ALARM_GREENPIN       1       // lingt indicator if temp is ok for flower
+
+#define  LED_WET_ALARM_REDPIN          8       // light indicator is earth is wet ehoght for flower
 #define  LED_WET_ALARM_GREENPIN        2       // light indicator is earth is wet ehoght for flower
+
+#define  LED_TEMP_ALARM_REDPIN         7       // lingt indicator if temp is ok for flower
+#define  LED_TEMP_ALARM_GREENPIN       1       // lingt indicator if temp is ok for flower
+
+#define  LED_WATER_ALARM_REDPIN        6       // light indicator if water is in watertank
 #define  LED_WATER_ALARM_GREENPIN      0       // light indicator if water is in watertank
 
 // GRB leds
@@ -43,14 +46,15 @@ SETUP COMPONET'S PINS LAYOUT
 #define PUMP_DATAPIN                   4       // water pomp data pin
 
 // system's constant
-const int LOOP_F =                     1000;   // loop run frequency
-const bool DEBUG =                     false;  // if debug mode on
+const int LOOP_F =                     10000;   // loop run frequency
+const bool DEBUG =                     true;   // if debug mode on
 
 // enviroment's constants
 const int DARK_LEVEL =                 800;   // value of light sensor for board of dark, if more then full dark
 const int DARKNESS_LEVEL =             400;    // value of light sensor for board of darkness, if less then sun
-const int HUMIDITY_LOW_LEVEL =         450;    // value of soil dryness
+const int HUMIDITY_LOW_LEVEL =         500;    // value of soil dryness
 const int HUMIDITY_HIGH_LEVEL =        700;    // level of soil wet
+const int WATER_TIME =                 2000;   //time for water on
 
 /*
 VARIABLE DEFINITION SECTION
@@ -68,10 +72,15 @@ LIGHTSENSOR lightSensor(SENSOR_LIGHT_DATAPIN);                          // light
 HUMIDITYSENSOR humiditySensor1(SENSOR1_HUMIDITY_DATAPIN);
 HUMIDITYSENSOR humiditySensor2(SENSOR2_HUMIDITY_DATAPIN);
 
+PUMP pumpDevice(PUMP_DATAPIN);                                          //water pump
+
 int _lightLevel = 0;
 int _humidityLevel1 = 0;
 int _humidityLevel2 = 0;
 int _averageHumidityLevel = 0;
+
+bool _isSun = false;
+bool _isDry = true;
 
 void setup() {
   // serial port init
@@ -80,22 +89,29 @@ void setup() {
     Serial.begin(9600);
   }
 
-  lightLed.setColor(2);
+  lightLed.setColor(0);
   humidityLed.setColor(0);
   temperatureLed.setColor(0);
   waterTankLed.setColor(0);
 
+  lightLed.blickRed();
+  humidityLed.blickRed();
+  temperatureLed.blickRed();
+  waterTankLed.blickRed();
 }
 // ----- end initials functions -------
 
 // MAIN PROGRAMM
-void loop() {
-
-  // light check
+void loop() {  
+    
+  // light check ---------------------------------------
   _lightLevel = lightSensor.value();
 
   if (DEBUG) {
+    Serial.println("");
+    Serial.println("");
     Serial.println(" -> loop trace start <-");
+    Serial.println("Light ------------");
     Serial.print("Light sensor value: ");
     Serial.println(_lightLevel);
     Serial.print("Light level detected: ");
@@ -104,29 +120,38 @@ void loop() {
   if (_lightLevel < DARKNESS_LEVEL) {  //sun
     if (DEBUG) {
       Serial.println("SUN");
+      _isSun = true;
     }
-    rgbLed.setColor(0, 255, 0);
+    rgbLed.setColor(0, 125, 0);
   } else {
     if (DEBUG) {
       Serial.println("DARKNESS");
+      _isSun = true;
     }
 
     if (_lightLevel > DARK_LEVEL) { //dark
-      rgbLed.setColor(255, 0, 0);
+      rgbLed.setColor(125, 0, 0);
     } else { //darkness
       if (DEBUG) {
         Serial.println("DARK");
+        _isSun = false;
       }
 
-      rgbLed.setColor(0, 0, 255);
+      rgbLed.setColor(0, 0, 125);
     }
   }
 
-  // soil humidity check
+  lightLed.setColor(2);
+  //----------------------------------
+
+
+
+  // soil humidity check ----------------------------------
   _humidityLevel1 = humiditySensor1.value();
   _humidityLevel2 = humiditySensor2.value();
 
   if (DEBUG) {
+    Serial.println("Soil humidity ------------");
     Serial.print("Soil humidity sensor value 1: ");
     Serial.println(_humidityLevel1);
     Serial.print("Soil humidity sensor value 2: ");
@@ -144,7 +169,8 @@ void loop() {
   if (_averageHumidityLevel < HUMIDITY_LOW_LEVEL) {
 
     if (DEBUG) {
-      Serial.println("DRYNESS");
+      Serial.println("DRY");
+      _isDry = true;
     }
 
     humidityLed.setColor(1);
@@ -153,17 +179,24 @@ void loop() {
     if (_averageHumidityLevel > HUMIDITY_HIGH_LEVEL) {
       if (DEBUG) {
         Serial.println("WET");
+        _isDry = false;
       }
     } else {
       if (DEBUG) {
         Serial.println("NORMAL");
+        _isDry = false;
       }
     }
 
     humidityLed.setColor(2);
   }
+  //----------------------------------
 
-  if (DEBUG) {
-    delay(1000);
+  // action section
+  if (_isSun && _isDry) {
+    pumpDevice.on(WATER_TIME);
   }
+  // end action point
+
+  delay(LOOP_F);
 }

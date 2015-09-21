@@ -21,6 +21,7 @@ class BLED {
     BLED(uint8_t redPin, uint8_t greenPin);
     void setColor(uint8_t toColor);
     uint8_t getColor();
+    void blickRed();
 };
 
 #endif

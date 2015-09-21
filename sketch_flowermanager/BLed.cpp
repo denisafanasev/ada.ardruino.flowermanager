@@ -10,8 +10,8 @@
 #include "BLED.h"
 
 BLED::BLED(uint8_t redPin, uint8_t greenPin) {
-  _redPin = constrain(redPin,0,13);
-  _greenPin = constrain(greenPin,0,13);
+  _redPin = constrain(redPin, 0, 13);
+  _greenPin = constrain(greenPin, 0, 13);
   _color = 0;
   pinMode(_redPin, OUTPUT);
   pinMode(_greenPin, OUTPUT);
@@ -35,4 +35,15 @@ void BLED::setColor(uint8_t toColor) {
 
 uint8_t BLED::getColor() {
   return _color;
+}
+
+void BLED::blickRed() {
+
+  digitalWrite(_redPin, HIGH);
+  digitalWrite(_greenPin, LOW);
+
+  delay(1000);
+
+  digitalWrite(_redPin, LOW);
+  digitalWrite(_greenPin, LOW);
 }
