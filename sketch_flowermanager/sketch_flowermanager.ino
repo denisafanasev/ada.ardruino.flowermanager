@@ -47,7 +47,7 @@ SETUP COMPONET'S PINS LAYOUT
 
 // system's constant
 const int LOOP_F =                     10000;   // loop run frequency
-const bool DEBUG =                     true;   // if debug mode on
+const bool DEBUG =                     false;   // if debug mode on
 
 // enviroment's constants
 const int DARK_LEVEL =                 800;   // value of light sensor for board of dark, if more then full dark
@@ -102,8 +102,8 @@ void setup() {
 // ----- end initials functions -------
 
 // MAIN PROGRAMM
-void loop() {  
-    
+void loop() {
+
   // light check ---------------------------------------
   _lightLevel = lightSensor.value();
 
@@ -118,23 +118,30 @@ void loop() {
   }
 
   if (_lightLevel < DARKNESS_LEVEL) {  //sun
+
     if (DEBUG) {
       Serial.println("SUN");
-      _isSun = true;
-    }
-    rgbLed.setColor(0, 125, 0);
-  } else {
-    if (DEBUG) {
-      Serial.println("DARKNESS");
-      _isSun = true;
     }
 
+    _isSun = true;
+    rgbLed.setColor(0, 125, 0);
+
+  } else {
+
+    _isSun = false;
+
     if (_lightLevel > DARK_LEVEL) { //dark
+
       rgbLed.setColor(125, 0, 0);
-    } else { //darkness
+
       if (DEBUG) {
         Serial.println("DARK");
-        _isSun = false;
+      }
+
+    } else { //darkness
+
+      if (DEBUG) {
+        Serial.println("DARKNESS");
       }
 
       rgbLed.setColor(0, 0, 125);
@@ -167,28 +174,19 @@ void loop() {
   }
 
   if (_averageHumidityLevel < HUMIDITY_LOW_LEVEL) {
+    _isDry = true;
+    humidityLed.setColor(1);
 
     if (DEBUG) {
       Serial.println("DRY");
-      _isDry = true;
     }
-
-    humidityLed.setColor(1);
   } else {
-
-    if (_averageHumidityLevel > HUMIDITY_HIGH_LEVEL) {
-      if (DEBUG) {
-        Serial.println("WET");
-        _isDry = false;
-      }
-    } else {
-      if (DEBUG) {
-        Serial.println("NORMAL");
-        _isDry = false;
-      }
-    }
-
+    _isDry = false;
     humidityLed.setColor(2);
+
+    if (DEBUG) {
+      Serial.println("WET");
+    }
   }
   //----------------------------------
 
