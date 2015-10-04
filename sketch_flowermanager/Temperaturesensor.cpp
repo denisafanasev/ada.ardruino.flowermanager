@@ -22,6 +22,6 @@ TEMPERATURESENSOR::TEMPERATURESENSOR(uint8_t toDataPin) {
 int TEMPERATURESENSOR::value() {
   int _value = 0;
   _value = analogRead(_dataPin);  // read data from sensor
-  _value = (500 * _value) / 1024; // transale to celcia degrees
+  _value = (500 * _value) / 1024; // convert the voltage to temperture
   return _value;
 }

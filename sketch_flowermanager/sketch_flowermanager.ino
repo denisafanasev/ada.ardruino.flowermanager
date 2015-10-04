@@ -23,7 +23,6 @@ SETUP COMPONET'S PINS LAYOUT
 #define SENSOR1_HUMIDITY_DATAPIN       5       // wet sensor data pin
 #define SENSOR1_HUMIDITY_SWITCHPIN     5       // wet sensor switch pin
 
-#define SENSOR2_HUMIDITY_DATAPIN       3       // wet sensor data pin
 #define SENSOR_WATERTANK_DATAPIN       4       // presure sensor data pin
 
 // leds
@@ -58,12 +57,12 @@ const bool DEBUG =                     false;   // if debug mode on
 const int DARK_LEVEL =                 800;     // value of light sensor for board of dark, if more then full dark
 const int DARKNESS_LEVEL =             400;     // value of light sensor for board of darkness, if less then sun
 const int HUMIDITY_LOW_LEVEL =         550;     // value of soil dryness
-const int HUMIDITY_HIGH_LEVEL =        700;     // level of soil wet
+const int HUMIDITY_HIGH_LEVEL =        800;     // level of soil wet
 const int WATER_TIME =                 2000;    // time for water on
 const int WATER_LEVEL =                400;     // water level in water tank
 const int TEMP_MIN =                   17;      // min temperature
 const int TEMP_MAX =                   28;      // max temperature
-const unsigned long soilInterval =     900000L; // soil humidity check interval (12 min)
+const unsigned long soilInterval =     900000;  // soil humidity check interval (12 min)
 
 /*
 VARIABLE DEFINITION SECTION
@@ -242,6 +241,11 @@ void loop() {
 
     if (DEBUG) {
       Serial.print("Soil humidity sensor value: ");
+    }
+
+    _humidityValue = humiditySensor.value();
+
+    if (DEBUG) {
       Serial.println(_humidityValue);
       Serial.print("Soil humidity level detected: ");
     }
