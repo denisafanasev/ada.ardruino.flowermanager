@@ -9,10 +9,19 @@
 
 #include "HUMIDITYSENSOR.h"
 
-HUMIDITYSENSOR::HUMIDITYSENSOR(uint8_t toDataPin) {
+HUMIDITYSENSOR::HUMIDITYSENSOR(uint8_t toDataPin, uint8_t toSwithPin) {
   _dataPin = constrain(toDataPin,0,5);    // check for only analog pin range number
+  
+  _switchPin = constrain(toSwithPin,0,13);    // check for only analog pin range number
+  pinMode(_switchPin, OUTPUT);
+  digitalWrite(_switchPin, LOW);
 }
 
 int HUMIDITYSENSOR::value() {
-   return analogRead(_dataPin);
+  int _value = 0;
+  digitalWrite(_switchPin, HIGH);
+  delay(1000);
+  _value = analogRead(_dataPin);
+  digitalWrite(_switchPin, LOW);
+  return _value;
 }

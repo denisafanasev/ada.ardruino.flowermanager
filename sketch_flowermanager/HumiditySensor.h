@@ -14,9 +14,10 @@
 class HUMIDITYSENSOR{
   private:
     uint8_t  _dataPin;
+    uint8_t  _switchPin;
 
   public:
-    HUMIDITYSENSOR(uint8_t toDataPin);
+    HUMIDITYSENSOR(uint8_t toDataPin, uint8_t toSwithPin);
     int value();
 };
 

@@ -9,6 +9,12 @@
 
 #include "BLED.h"
 
+/*
+ * Constructor
+ * 
+ * @param redPin - number of pin for red color
+ * @param greenPin - numver of pin for green color
+ */
 BLED::BLED(uint8_t redPin, uint8_t greenPin) {
   _redPin = constrain(redPin, 0, 13);
   _greenPin = constrain(greenPin, 0, 13);
