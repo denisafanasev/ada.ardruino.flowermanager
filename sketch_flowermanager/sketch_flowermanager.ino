@@ -51,7 +51,16 @@ SETUP COMPONET'S PINS LAYOUT
 
 // system's constant
 const int LOOP_F =                     1000;   // loop run frequency
-const bool DEBUG =                     false;   // if debug mode on
+
+
+const bool DEBUG =                     false;   // if debug mode on for all activities
+const bool DEBUG_LIGHT =               false;   // trace light sensor activity
+const bool DEBUG_TEMP =                false;   // trace light sensor activity
+const bool DEBUG_SOIL =                false;   // trace light sensor activity
+const bool DEBUG_WATER =               false;   // trace light sensor activity
+
+
+
 
 // enviroment's constants
 const int DARK_LEVEL =                 800;     // value of light sensor for board of dark, if more then full dark
@@ -101,7 +110,7 @@ unsigned long prevSoilTime = 0;
 void setup() {
   // serial port init
 
-  if (DEBUG) {
+  if (DEBUG || DEBUG_WATER || DEBUG_SOIL || DEBUG_TEMP || DEBUG_LIGHT) {
     Serial.begin(9600);
   }
 
@@ -123,9 +132,13 @@ void loop() {
   // light check ---------------------------------------
   _lightLevel = lightSensor.value();
 
+
   if (DEBUG) {
     Serial.println(" ");
     Serial.println(" -> loop trace start <-");
+  }
+  
+  if (DEBUG || DEBUG_LIGHT) {
     Serial.print("Light sensor value: ");
     Serial.println(_lightLevel);
     Serial.print("Light level detected: ");
@@ -133,7 +146,7 @@ void loop() {
 
   if (_lightLevel < DARKNESS_LEVEL) {  //sun
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_LIGHT) {
       Serial.println("SUN");
     }
 
@@ -148,13 +161,13 @@ void loop() {
 
       rgbLed.setColor(125, 0, 0);
 
-      if (DEBUG) {
+      if (DEBUG || DEBUG_LIGHT) {
         Serial.println("DARK");
       }
 
     } else { //darkness
 
-      if (DEBUG) {
+      if (DEBUG || DEBUG_LIGHT) {
         Serial.println("DARKNESS");
       }
 
@@ -169,7 +182,7 @@ void loop() {
   _waterLevel = pressureSensor.value();
 
 
-  if (DEBUG) {
+  if (DEBUG || DEBUG_WATER) {
     Serial.print("Water lever sensor value: ");
     Serial.println(_waterLevel);
     Serial.print("Water level detected: ");
@@ -180,14 +193,14 @@ void loop() {
     _isWater = true;
     waterTankLed.setColor(2);
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_WATER) {
       Serial.println("HIGH");
     }
   } else {
     _isWater = false;
     waterTankLed.setColor(1);
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_WATER) {
       Serial.println("LOW");
     }
   }
@@ -197,7 +210,7 @@ void loop() {
   _tempValue = temperatureSensor.value();
 
 
-  if (DEBUG) {
+  if (DEBUG || DEBUG_TEMP) {
     Serial.print("Temp sensor value: ");
     Serial.println(_tempValue);
     Serial.print("Temp level detected: ");
@@ -207,21 +220,21 @@ void loop() {
   if (_tempValue > TEMP_MAX) {
     temperatureLed.setColor(1);
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_TEMP) {
       Serial.println("HIGH");
     }
   } else {
     if (_tempValue < TEMP_MIN) {
       temperatureLed.setColor(1);
 
-      if (DEBUG) {
+      if (DEBUG || DEBUG_TEMP) {
         Serial.println("LOW");
       }
     }
     else {
       temperatureLed.setColor(2);
 
-      if (DEBUG) {
+      if (DEBUG || DEBUG_TEMP) {
         Serial.println("NORM");
       }
     }
@@ -239,13 +252,13 @@ void loop() {
   if ((currTime - prevSoilTime > soilInterval) || (prevSoilTime == 0)) {
     prevSoilTime = currTime;
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_SOIL) {
       Serial.print("Soil humidity sensor value: ");
     }
 
     _humidityValue = humiditySensor.value();
 
-    if (DEBUG) {
+    if (DEBUG || DEBUG_SOIL) {
       Serial.println(_humidityValue);
       Serial.print("Soil humidity level detected: ");
     }
@@ -254,14 +267,14 @@ void loop() {
       _isDry = true;
       humidityLed.setColor(1);
 
-      if (DEBUG) {
+      if (DEBUG || DEBUG_SOIL) {
         Serial.println("DRY");
       }
     } else {
       _isDry = false;
       humidityLed.setColor(2);
 
-      if (DEBUG) {
+      if (DEBUG || DEBUG_SOIL) {
         Serial.println("WET");
       }
     }
