@@ -25,3 +25,4 @@ int TEMPERATURESENSOR::value() {
   _value = (500 * _value) / 1024; // convert the voltage to temperture
   return _value;
 }
+

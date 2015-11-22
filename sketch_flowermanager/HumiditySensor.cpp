@@ -25,3 +25,4 @@ int HUMIDITYSENSOR::value() {
   digitalWrite(_switchPin, LOW);
   return _value;
 }
+

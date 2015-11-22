@@ -18,3 +18,4 @@ int PRESSURESENSOR::value() {
   _value = analogRead(_dataPin);
   return _value;
 }
+

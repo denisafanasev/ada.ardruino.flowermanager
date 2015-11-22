@@ -15,3 +15,4 @@ LIGHTSENSOR::LIGHTSENSOR(uint8_t toDataPin) {
 int LIGHTSENSOR::value() {
   return analogRead(_dataPin);
 }
+

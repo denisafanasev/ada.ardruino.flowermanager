@@ -65,13 +65,13 @@ const bool DEBUG_WATER =               false;   // trace light sensor activity
 // enviroment's constants
 const int DARK_LEVEL =                 800;     // value of light sensor for board of dark, if more then full dark
 const int DARKNESS_LEVEL =             400;     // value of light sensor for board of darkness, if less then sun
-const int HUMIDITY_LOW_LEVEL =         550;     // value of soil dryness
+const int HUMIDITY_LOW_LEVEL =         600;     // value of soil dryness
 const int HUMIDITY_HIGH_LEVEL =        800;     // level of soil wet
 const int WATER_TIME =                 2000;    // time for water on
-const int WATER_LEVEL =                400;     // water level in water tank
+const int WATER_LEVEL =                500;     // water level in water tank
 const int TEMP_MIN =                   17;      // min temperature
 const int TEMP_MAX =                   28;      // max temperature
-const unsigned long soilInterval =     900000;  // soil humidity check interval (12 min)
+const unsigned long soilInterval =     900000;  // soil humidity check interval (15 min)
 
 /*
 VARIABLE DEFINITION SECTION
@@ -291,3 +291,4 @@ void loop() {
   delay(LOOP_F);
 
 }
+
