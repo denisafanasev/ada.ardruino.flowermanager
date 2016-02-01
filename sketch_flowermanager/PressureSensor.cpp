@@ -19,3 +19,7 @@ int PRESSURESENSOR::value() {
   return _value;
 }
 
+void PRESSURESENSOR::init() {
+  
+}
+

@@ -18,6 +18,7 @@ class LIGHTSENSOR{
   public:
     LIGHTSENSOR(uint8_t toDataPin);
     int value();
+    void init();
 };
 
 

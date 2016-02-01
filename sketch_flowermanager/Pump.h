@@ -21,6 +21,7 @@ class PUMP {
 
     // start
     void on(int _delay);
+    void init();
 };
 
 #endif

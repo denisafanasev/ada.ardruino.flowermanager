@@ -18,6 +18,7 @@ class PRESSURESENSOR{
   public:
     PRESSURESENSOR(uint8_t toDataPin);
     int value();
+    void init();
 };
 
 

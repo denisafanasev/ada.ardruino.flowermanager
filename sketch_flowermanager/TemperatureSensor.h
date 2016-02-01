@@ -17,7 +17,8 @@ class TEMPERATURESENSOR{
 
   public:
     TEMPERATURESENSOR(uint8_t toDataPin);
-    int value();
+    float value();
+    void init();
 };
 
 

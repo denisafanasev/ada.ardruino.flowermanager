@@ -11,13 +11,16 @@
 // constructor implementation
 PUMP::PUMP(uint8_t dataPin) {
   _dataPin = constrain(dataPin,0,13);
-  pinMode(_dataPin, OUTPUT);
-  digitalWrite(_dataPin, LOW);
 }
 
 void PUMP::on(int _delay) {
   digitalWrite(_dataPin, HIGH);
   delay(_delay);
+  digitalWrite(_dataPin, LOW);
+}
+
+void PUMP::init() {
+    pinMode(_dataPin, OUTPUT);
   digitalWrite(_dataPin, LOW);
 }
 

@@ -16,3 +16,7 @@ int LIGHTSENSOR::value() {
   return analogRead(_dataPin);
 }
 
+void LIGHTSENSOR::init() {
+  
+}
+
