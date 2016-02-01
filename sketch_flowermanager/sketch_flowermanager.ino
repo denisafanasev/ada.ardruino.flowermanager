@@ -15,7 +15,7 @@
 #include "StatusRegister.h"
 
 const unsigned long soilInterval =     900000;  // soil humidity check interval (15 min)
-const int LOOP_F =                     1000;   // loop run frequency
+//const int LOOP_F =                     1000;   // loop run frequency
 
 // enviroment's constants
 const int DARK_LEVEL =                 800;     // value of light sensor for board of dark, if more then full dark
@@ -35,6 +35,8 @@ uint8_t _humV = 0;
 uint8_t _waterV = 0;
 uint8_t _lightV = 0;
 uint8_t _tempV = 0;
+
+int toneForValue = 0;
 
 unsigned long currTime = 0;
 unsigned long prevSoilTime = 0;
@@ -59,6 +61,8 @@ void setup() {
   Serial.begin(9600);
 
   reset_all_to_low();
+  sensorLeds.off();
+  statusLeds.AllOff();
 
   cooler.init();
   sensorLeds.init();
@@ -148,7 +152,7 @@ void loop() {
   Serial.println(_tempValue);
   Serial.print("Temp level detected: ");
 
-  _tempV = 1; 
+  _tempV = 1;
   if (_tempValue > TEMP_MAX) {
     Serial.println("HIGH");
   } else {
@@ -163,14 +167,25 @@ void loop() {
   sensorLeds.on(_humV, _waterV, _lightV, _tempV); //setup leds colors
 
   // action section
-  //if (_isSun && _isDry && _isWater) {
+
   if ((_humV == 1) && (_waterV == 2) && (_lightV == 2)) {
     statusLeds.pumpWorkingOn(true);
     pumpDevice.on(WATER_TIME);
     statusLeds.pumpWorkingOn(false);
   }
 
+
+  // generate a frequency from the sin value
+  if (_waterV == 1) {
+    for (int toneForValue = 0; toneForValue < 180; toneForValue++) {
+      tone(4, 2000 + (int((sin(toneForValue * (3.1412 / 180))) * 1000)));
+      delay(2);
+    }
+  } else {
+    noTone(4);
+    toneForValue = 0;
+  }
+
   // end action point
 
-  delay(LOOP_F);
 }
