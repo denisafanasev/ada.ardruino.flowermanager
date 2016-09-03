@@ -29,6 +29,17 @@ class STATUSREGISTER {
     bool _isLightAlarm;
     bool _isTempAlarm;
 
+    bool __lightIs_on;
+    bool __soilHumIs_on;
+    bool __waterLevelIs_on;
+    bool __tempIs_on;
+    bool __airHumIs_on;
+    bool __isSoilHum_on;
+    bool __isPump_on;
+    bool __isWaterAlarm_on;
+    bool __isLightAlarm_on;
+    bool __isTempAlarm_on;
+
     void setValue();
 
   public:
@@ -47,6 +58,7 @@ class STATUSREGISTER {
     void tempAlarm(bool isOn);
     
     void AllOff();
+    void AllRed();
     void init(); // funy welcome action
     bool isOn(); // led status
     bool canWatering(); // led status
